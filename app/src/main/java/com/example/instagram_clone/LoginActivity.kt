@@ -40,6 +40,7 @@ class LoginActivity : AppCompatActivity() {
 
         val loginButton = findViewById<Button>(R.id.email_login_btn)
         val googleSignInBtn = findViewById<Button>(R.id.google_sign_in_button)
+        val facebookLoginBtn = findViewById<Button>(R.id.facebook_login_btn)
 
         loginButton.setOnClickListener {
             signInAndSignUp()
@@ -48,6 +49,11 @@ class LoginActivity : AppCompatActivity() {
         googleSignInBtn.setOnClickListener {
             //First Step
             googleLogin()
+        }
+
+        facebookLoginBtn.setOnClickListener {
+            //First Step
+            facebookLogin()
         }
 
         var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -86,26 +92,41 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun facebookLogin() {
-        LoginManager.getInstance().logInWithPublishPermissions(this, Arrays.asList("public_profile", "email"))
+        LoginManager.getInstance()
+            .logInWithReadPermissions(this, Arrays.asList("public_profile", "email"))
 
-        LoginManager.getInstance().registerCallback(callBackManager, object : FacebookCallback<LoginResult> {
-            override fun onSuccess(result: LoginResult?) {
-                handleFacebookAccessToken(result?.accessToken)
-            }
+        LoginManager.getInstance()
+            .registerCallback(callBackManager, object : FacebookCallback<LoginResult> {
+                override fun onSuccess(result: LoginResult?) {
+                    //Second Step
+                    handleFacebookAccessToken(result?.accessToken)
+                }
 
-            override fun onCancel() {
-                TODO("Not yet implemented")
-            }
+                override fun onCancel() {
+                }
 
-            override fun onError(error: FacebookException?) {
-                TODO("Not yet implemented")
-            }
+                override fun onError(error: FacebookException?) {
+                }
 
-        })
+            })
     }
 
     fun handleFacebookAccessToken(token: AccessToken?) {
-        var credential = FacebookAuthProvider.getCredential(token?.token!!)
+        var credential = FacebookAuthProvider.getCredential(token!!.token)  // (token?.token!!)
+
+        auth?.signInWithCredential(credential)
+
+            ?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    //Third Step
+                    // Login
+                    moveMainPage(task.result?.user)
+                } else {
+                    //Show the error message
+                    Toast.makeText(this, "", Toast.LENGTH_LONG).show()
+
+                }
+            }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
