@@ -7,10 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -55,10 +52,11 @@ class LoginActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if(requestCode == GOOGLE_LOGIN_CODE) {
-            var result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
+            var result : GoogleSignInResult? = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
 
-            // if(result.isSuccess)
-            if(result?.isSuccess!!) {
+             if(result!! .isSuccess)
+            //if(result?.isSuccess!!)
+             {
                 var account= result?.signInAccount
                 //Second step
                 firebaseAuthWithGoogle(account)
