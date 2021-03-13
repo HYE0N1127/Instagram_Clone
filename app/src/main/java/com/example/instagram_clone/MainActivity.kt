@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
         }
+        return false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
