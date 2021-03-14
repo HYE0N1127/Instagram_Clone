@@ -45,6 +45,8 @@ dependencies {
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.google.firebase:firebase-auth:20.0.3'
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    implementation 'com.google.firebase:firebase-storage-ktx:19.2.1'
+    //implemenatation을 추가할 때는 공식 홈페이지를 보고 추가하는 습관 들이기 : KTX가 적혀있는 implenatation의 경우에는 Kotiln에 특화된 Inplemenatation임
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
