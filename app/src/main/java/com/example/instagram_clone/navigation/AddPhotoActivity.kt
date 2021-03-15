@@ -42,8 +42,8 @@ class AddPhotoActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == PICK_IMAGE_FROM_ALBUM) {
-            if(resultCode == Activity.RESULT_OK) {
+        if (requestCode == PICK_IMAGE_FROM_ALBUM) {
+            if (resultCode == Activity.RESULT_OK) {
                 // This is path to the selected Image
                 photoUri = data?.data
 
@@ -66,7 +66,7 @@ class AddPhotoActivity : AppCompatActivity() {
 
         //FileUpload
         storageRef?.putFile(photoUri!!)?.addOnSuccessListener {
-            Toast.makeText(this, getString(R.string.upload_success), Toast.LENGTH_LONG.show())
+            Toast.makeText(this, getString(R.string.upload_success), Toast.LENGTH_LONG) .show()
         }
     }
 }
