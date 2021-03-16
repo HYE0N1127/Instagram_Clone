@@ -41,7 +41,7 @@
 
         <EditText
             android:gravity="top"
-            android:id="@+id/editphoto_edit_explain"
+            android:id="@+id/addphoto_edit_explain"
             android:hint="@string/hint_image_content"
             android:layout_width="match_parent"
             android:layout_height="100dp" />
