@@ -74,59 +74,58 @@ class AddPhotoActivity : AppCompatActivity() {
         var storageRef = storage?.reference?.child("images")?.child(imageFileName)
 
         //Promise method
-//        storageRef?.putFile(photoUri!!)?.continueWithTask { task: Task<UploadTask.TaskSnapshot> ->
-//            return@continueWithTask storageRef.downloadUrl
-//        }?.addOnSuccessListener { uri ->
-//            var contentDTO = contentDTO()
-//
-//            // Insert downloaderUrl of image
-//            contentDTO.imageUrl = uri.toString()
-//
-//            //Insert UID of user
-//            contentDTO.uid = auth?.currentUser?.uid
-//
-//            //Insert UserId
-//            contentDTO.uid = auth?.currentUser?.email
-//
-//            //Insert ezplain of content
-//            contentDTO.explain = addphoto_edit_explain.text.toString()
-//
-//            //Insert Timestamp
-//            contentDTO.timestamp = System.currentTimeMillis()
-//
-//            firestore?.collection("images")?.document()?.set(contentDTO)
-//
-//            setResult(Activity.RESULT_OK)
-//
-//            finish()
-//        }
+        storageRef?.putFile(photoUri!!)?.continueWithTask { task: Task<UploadTask.TaskSnapshot> ->
+            return@continueWithTask storageRef.downloadUrl
+        }?.addOnSuccessListener { uri ->
+            var contentDTO = contentDTO()
 
-        //CallBack Method
-        storageRef?.putFile(photoUri!!)?.addOnSuccessListener {
-            storageRef.downloadUrl.addOnSuccessListener { uri ->
-                var contentDTO = contentDTO()
+            // Insert downloaderUrl of image
+            contentDTO.imageUrl = uri.toString()
 
-                // Insert downloaderUrl of image
-                contentDTO.imageUrl = uri.toString()
+            //Insert UID of user
+            contentDTO.uid = auth?.currentUser?.uid
 
-                //Insert UID of user
-                contentDTO.uid = auth?.currentUser?.uid
+            //Insert UserId
+            contentDTO.uid = auth?.currentUser?.email
 
-                //Insert UserId
-                contentDTO.uid = auth?.currentUser?.email
+            //Insert ezplain of content
+            contentDTO.explain = addphoto_edit_explain.text.toString()
 
-                //Insert ezplain of content
-                contentDTO.explain = addphoto_edit_explain.text.toString()
+            //Insert Timestamp
+            contentDTO.timestamp = System.currentTimeMillis()
 
-                //Insert Timestamp
-                contentDTO.timestamp = System.currentTimeMillis()
+            firestore?.collection("images")?.document()?.set(contentDTO)
 
-                firestore?.collection("images")?.document()?.set(contentDTO)
+            setResult(Activity.RESULT_OK)
 
-                setResult(Activity.RESULT_OK)
-
-                finish()
-            }
+            finish()
         }
+        //CallBack Method
+//        storageRef?.putFile(photoUri!!)?.addOnSuccessListener {
+//            storageRef.downloadUrl.addOnSuccessListener { uri ->
+//                var contentDTO = contentDTO()
+//
+//                // Insert downloaderUrl of image
+//                contentDTO.imageUrl = uri.toString()
+//
+//                //Insert UID of user
+//                contentDTO.uid = auth?.currentUser?.uid
+//
+//                //Insert UserId
+//                contentDTO.uid = auth?.currentUser?.email
+//
+//                //Insert ezplain of content
+//                contentDTO.explain = addphoto_edit_explain.text.toString()
+//
+//                //Insert Timestamp
+//                contentDTO.timestamp = System.currentTimeMillis()
+//
+//                firestore?.collection("images")?.document()?.set(contentDTO)
+//
+//                setResult(Activity.RESULT_OK)
+//
+//                finish()
+//            }
+//        }
     }
 }
