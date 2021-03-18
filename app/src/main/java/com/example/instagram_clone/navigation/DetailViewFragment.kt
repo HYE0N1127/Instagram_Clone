@@ -18,6 +18,8 @@ import kotlinx.android.synthetic.main.item_detail.view.*
 
 class DetailViewFragment : Fragment() {
     var firestore: FirebaseFirestore? = null
+    var uid = FirebaseAuth.getInstance().currentUser?.uid
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -26,6 +28,7 @@ class DetailViewFragment : Fragment() {
         var view = LayoutInflater.from(activity).inflate(R.layout.fragment_detail, container, false)
 
         firestore = FirebaseFirestore.getInstance()
+        uid = FirebaseAuth.getInstance().currentUser?.uid
 
         view.detailviewfragment_recyclerview.adapter = DetailViewRecyclerViewAdapter()
         view.detailviewfragment_recyclerview.layoutManager = LinearLayoutManager(activity)
@@ -73,16 +76,33 @@ class DetailViewFragment : Fragment() {
             viewholder.detailViewItem_Profile_TextView.text = contentDTOs!![p1].userId
 
             //Image
-            Glide.with(p0.itemView.context).load(contentDTOs!![p1].imageUrl).into(viewholder.detailViewItem_ImageView_Content)
+            Glide.with(p0.itemView.context).load(contentDTOs!![p1].imageUrl)
+                .into(viewholder.detailViewItem_ImageView_Content)
 
             //Explain of Content
             viewholder.detailViewItem_explain_Textview.text = contentDTOs!![p1].explain
 
             //likes
-            viewholder.detailViewItem_FavoriteCounter_Textview.text = "Likes " + contentDTOs!![p1].favotireCount
+            viewholder.detailViewItem_FavoriteCounter_Textview.text =
+                "Likes " + contentDTOs!![p1].favoriteCount
 
             //profile Image
-            Glide.with(p0.itemView.context).load(contentDTOs!![p1].imageUrl).into(viewholder.detailViewItem_Profile_image)
+            Glide.with(p0.itemView.context).load(contentDTOs!![p1].imageUrl)
+                .into(viewholder.detailViewItem_Profile_image)
+
+            //This code is when the button clicked
+            viewholder.detailViewItem_Favorite_Imageview.setOnClickListener {
+                favoriteEvent(p1)
+            }
+
+            //This code is when the page is loaded
+            if (contentDTOs!![p1].favorites.containsKey(uid)) {
+                //This is like status
+                viewholder.detailViewItem_Favorite_Imageview.setImageResource(R.drawable.ic_favorite)
+            } else {
+                //This is unlike status
+                viewholder.detailViewItem_Favorite_Imageview.setImageResource(R.drawable.ic_favorite_border)
+            }
         }
 
         fun favoriteEvent(position: Int) {
@@ -90,10 +110,10 @@ class DetailViewFragment : Fragment() {
 
             firestore?.runTransaction { transaction ->
 
-                var uid = FirebaseAuth.getInstance().currentUser?.uid
+
                 var contentDTO = transaction.get(tsdoc!!).toObject(contentDTO::class.java)
 
-                if(contentDTO!!.favorites.containsKey(uid)) {
+                if (contentDTO!!.favorites.containsKey(uid)) {
                     //When the button is clicked
                     contentDTO?.favoriteCount = contentDTO.favoriteCount!! - 1
                     contentDTO?.favorites.remove(uid)
@@ -103,7 +123,7 @@ class DetailViewFragment : Fragment() {
                     contentDTO?.favorites[uid!!] = true
                 }
 
-
+                transaction.set(tsdoc, contentDTO)
             }
         }
     }
