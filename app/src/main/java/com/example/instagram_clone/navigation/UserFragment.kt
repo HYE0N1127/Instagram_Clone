@@ -1,5 +1,6 @@
 package com.example.instagram_clone.navigation
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Layout
 import android.util.Log
@@ -14,10 +15,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.instagram_clone.LoginActivity
+import com.example.instagram_clone.MainActivity
 import com.example.instagram_clone.R
 import com.example.instagram_clone.navigation.model.contentDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_user.view.*
 
 class UserFragment : Fragment() {
@@ -25,6 +29,8 @@ class UserFragment : Fragment() {
     var firestore: FirebaseFirestore? = null
     var uid: String? = null
     var auth: FirebaseAuth? = null
+    var currentUserUid: String? = null  // 나의 계정인지 다른 사람의 계정인지 분류하기 위한 변수
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,6 +41,30 @@ class UserFragment : Fragment() {
         uid = arguments?.getString("destinationUid")
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
+        currentUserUid = auth?.currentUser?.uid
+
+        if(uid == currentUserUid) {
+            //my Page
+            fragmentView?.account_btn_follow_signout?.text = getString(R.string.signout)
+            fragmentView?.account_btn_follow_signout?.setOnClickListener {
+                activity?.finish()
+
+                startActivity(Intent(activity, LoginActivity::class.java))
+                auth?.signOut()
+            }
+        } else {
+            //Other User Page
+            fragmentView?.account_btn_follow_signout?.text = getString(R.string.follow)
+
+            var mainactivity = (activity as MainActivity) // 누구의 유저페이지인지 보여주는 Back 버튼과 TextView 활성화
+
+            mainactivity?.toolbar_username?.text = arguments?.getString("userId")
+            mainactivity?.toolbar_btn_back?.setOnClickListener {
+                mainactivity.bottom_navigation.selectedItemId = R.id.action_home
+            }
+            mainactivity?.toolbar_title_image?.visibility = View.GONE       //타이틀 이미지를 안보이게 해줌
+            mainactivity?.toolbar_username?.visibility = View.VISIBLE       //유저네임을 보이게 해줌
+        }
 
         fragmentView?.account_recyclerview?.adapter = UserFragmentRecyclerViewAdapter()
         fragmentView?.account_recyclerview?.layoutManager = GridLayoutManager(activity!!, 3)

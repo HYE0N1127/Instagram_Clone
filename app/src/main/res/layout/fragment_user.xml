@@ -17,7 +17,7 @@
             android:src="@drawable/ic_account" />
 
         <Button
-            android:id="@+id/account_btn_folloiw_signout"
+            android:id="@+id/account_btn_follow_signout"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_alignParentBottom="true"
@@ -27,7 +27,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/account_btn_folloiw_signout"
+            android:layout_above="@+id/account_btn_follow_signout"
             android:layout_toRightOf="@+id/account_iv_profile"
             android:gravity="center">
 
