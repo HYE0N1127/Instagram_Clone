@@ -64,6 +64,7 @@ class UserFragment : Fragment() {
             }
             mainactivity?.toolbar_title_image?.visibility = View.GONE       //타이틀 이미지를 안보이게 해줌
             mainactivity?.toolbar_username?.visibility = View.VISIBLE       //유저네임을 보이게 해줌
+            mainactivity?.toolbar_btn_back.visibility = View.VISIBLE        //툴바의 뒤로가기 버튼을 보이게 해줌
         }
 
         fragmentView?.account_recyclerview?.adapter = UserFragmentRecyclerViewAdapter()

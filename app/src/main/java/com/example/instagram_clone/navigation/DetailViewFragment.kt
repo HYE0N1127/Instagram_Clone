@@ -49,6 +49,9 @@ class DetailViewFragment : Fragment() {
                     contentDTOs.clear()
                     contentUidList.clear()
 
+                    //SignOut을 눌렀을 때에, 크래쉬가 발생하는 오류를 없애주는 코드
+                    if(querySnapshot == null) return@addSnapshotListener
+
                     for (snapshot in querySnapshot!!.documents) {
                         var item = snapshot.toObject(contentDTO::class.java)
                         contentDTOs.add(item!!)
@@ -104,7 +107,19 @@ class DetailViewFragment : Fragment() {
                 //This is unlike status
                 viewholder.detailViewItem_Favorite_Imageview.setImageResource(R.drawable.ic_favorite_border)
             }
+            //프로필 이미지를 클릭했을 때에 상대방 유저 정보로 이동하는 코드
+            viewholder.detailViewItem_Profile_image.setOnClickListener {
+                var fragment = UserFragment()
+                var bundle = Bundle()
+
+                bundle.putString("destinationUid", contentDTOs[p1].uid) //UID값 받아오기
+                bundle.putString("userId", contentDTOs[p1].userId) //Email 받아오기
+                fragment.arguments = bundle
+                activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_content, fragment)?.commit()
+
+            }
         }
+
 
         fun favoriteEvent(position: Int) {
             var tsdoc = firestore?.collection("images")?.document(contentUidList[position])
