@@ -30,6 +30,9 @@ class UserFragment : Fragment() {
     var uid: String? = null
     var auth: FirebaseAuth? = null
     var currentUserUid: String? = null  // 나의 계정인지 다른 사람의 계정인지 분류하기 위한 변수
+    companion object {
+        var PICK_PROFILE_FROM_ALBUM = 10
+    }
 
 
     override fun onCreateView(
@@ -37,13 +40,14 @@ class UserFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fragmentView = LayoutInflater.from(activity).inflate(R.layout.fragment_user, container, false)
+        fragmentView =
+            LayoutInflater.from(activity).inflate(R.layout.fragment_user, container, false)
         uid = arguments?.getString("destinationUid")
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
         currentUserUid = auth?.currentUser?.uid
 
-        if(uid == currentUserUid) {
+        if (uid == currentUserUid) {
             //my Page
             fragmentView?.account_btn_follow_signout?.text = getString(R.string.signout)
             fragmentView?.account_btn_follow_signout?.setOnClickListener {
@@ -70,12 +74,14 @@ class UserFragment : Fragment() {
         fragmentView?.account_recyclerview?.adapter = UserFragmentRecyclerViewAdapter()
         fragmentView?.account_recyclerview?.layoutManager = GridLayoutManager(activity!!, 3)
 
+        fragmentView?.account_iv_profile?.setOnClickListener {      //UserFragment에 프로필 사진 올리기
+            var photoPickerIntent = Intent(Intent.ACTION_PICK)
+            photoPickerIntent.type = "image/*"
+            activity?.startActivityForResult(photoPickerIntent, PICK_PROFILE_FROM_ALBUM)
+        }
+
         return fragmentView
     }
-
-
-
-
 
 
     inner class UserFragmentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
