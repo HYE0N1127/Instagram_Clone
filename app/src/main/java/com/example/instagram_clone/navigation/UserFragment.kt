@@ -20,7 +20,9 @@ import com.example.instagram_clone.MainActivity
 import com.example.instagram_clone.R
 import com.example.instagram_clone.navigation.model.contentDTO
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_user.view.*
 
@@ -30,6 +32,7 @@ class UserFragment : Fragment() {
     var uid: String? = null
     var auth: FirebaseAuth? = null
     var currentUserUid: String? = null  // 나의 계정인지 다른 사람의 계정인지 분류하기 위한 변수
+
     companion object {
         var PICK_PROFILE_FROM_ALBUM = 10
     }
@@ -79,8 +82,21 @@ class UserFragment : Fragment() {
             photoPickerIntent.type = "image/*"
             activity?.startActivityForResult(photoPickerIntent, PICK_PROFILE_FROM_ALBUM)
         }
-
+        getProfileImage()
         return fragmentView
+    }
+
+    fun getProfileImage() {     //올린 이미지를 다운받는 함수
+        firestore?.collection("profileImages")?.document(uid!!)
+            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                if (documentSnapshot == null) return@addSnapshotListener
+
+                if (documentSnapshot.data != null) {
+                    var url = documentSnapshot?.data!!["image"]     //Image주소가 넘어옴
+                    Glide.with(activity!!).load(url).apply(RequestOptions().circleCrop())
+                        .into(fragmentView?.account_iv_profile!!)
+                }
+            }
     }
 
 
