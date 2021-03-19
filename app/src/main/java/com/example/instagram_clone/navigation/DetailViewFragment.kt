@@ -32,7 +32,7 @@ class DetailViewFragment : Fragment() {
         uid = FirebaseAuth.getInstance().currentUser?.uid
 
         view.detailviewfragment_recyclerview.adapter = DetailViewRecyclerViewAdapter()
-        view.detailviewfragment_recyclerview.layoutManager = GridLayoutManager(activity, 3)
+        view.detailviewfragment_recyclerview.layoutManager = LinearLayoutManager(activity)
 
         return view
     }
@@ -88,7 +88,7 @@ class DetailViewFragment : Fragment() {
                 "Likes " + contentDTOs!![p1].favoriteCount
 
             //profile Image
-            Glide.with(p0.itemView.context).load(contentDTOs!![p1].imageUrl)
+            Glide.with(p0.itemView.context).load(R.drawable.ic_launcher_foreground)
                 .into(viewholder.detailViewItem_Profile_image)
 
             //This code is when the button clicked

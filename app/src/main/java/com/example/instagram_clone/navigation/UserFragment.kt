@@ -2,6 +2,7 @@ package com.example.instagram_clone.navigation
 
 import android.os.Bundle
 import android.text.Layout
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,14 +42,19 @@ class UserFragment : Fragment() {
         return fragmentView
     }
 
+
+
+
+
+
     inner class UserFragmentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        var contentDTOs: ArrayList<contentDTO> = arrayListOf()
+        var contentDTOs: ArrayList<contentDTO> = ArrayList()
 
         init {
             firestore?.collection("images")?.whereEqualTo("uid", uid)
-                ?.addSnapshotListener addSnapshotListner@{ querySnapshot, firebaseFirestoreException ->
+                ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                     //Somtimes, This code return null of querySnapshot when it signout
-                    if (querySnapshot == null) return@addSnapshotListner
+                    if (querySnapshot == null) return@addSnapshotListener
 
                     //Get Data
                     for (snapshot in querySnapshot.documents) {
@@ -67,10 +73,7 @@ class UserFragment : Fragment() {
             return CustomViewHolder(imageView)
         }
 
-        inner class CustomViewHolder(var imageView: ImageView) :
-            RecyclerView.ViewHolder(imageView) {
-
-        }
+        inner class CustomViewHolder(var imageView: ImageView) : RecyclerView.ViewHolder(imageView)
 
         override fun getItemCount(): Int {
             return contentDTOs.size
@@ -78,7 +81,6 @@ class UserFragment : Fragment() {
 
         override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
             var imageView = (p0 as CustomViewHolder).imageView
-
             Glide.with(p0.itemView.context).load(contentDTOs[p1].imageUrl)
                 .apply(RequestOptions().centerCrop()).into(imageView)
         }
