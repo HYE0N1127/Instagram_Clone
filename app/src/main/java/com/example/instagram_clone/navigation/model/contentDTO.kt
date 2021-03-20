@@ -9,7 +9,7 @@ data class contentDTO(
     var favoriteCount: Int? = 0,
     var favorites :MutableMap<String, Boolean> = HashMap()) {
 
-    data class comments (var uid: String? = null,
+    data class comment (var uid: String? = null,
                          var userId: String? = null,
                          var comments : String? = null,
                          var timestamp: Long? = null)
