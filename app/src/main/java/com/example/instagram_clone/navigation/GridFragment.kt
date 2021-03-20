@@ -72,7 +72,7 @@ class GridFragment : Fragment() {
 
         override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
             var imageView = (p0 as CustomViewHolder).imageView
-            
+
             Glide.with(p0.itemView.context).load(contentDTOs[p1].imageUrl)
                 .apply(RequestOptions().centerCrop()).into(imageView)
         }
