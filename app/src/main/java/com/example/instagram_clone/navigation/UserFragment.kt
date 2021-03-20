@@ -1,6 +1,7 @@
 package com.example.instagram_clone.navigation
 
 import android.content.Intent
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.Layout
 import android.util.Log
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -73,6 +75,9 @@ class UserFragment : Fragment() {
             mainactivity?.toolbar_title_image?.visibility = View.GONE       //타이틀 이미지를 안보이게 해줌
             mainactivity?.toolbar_username?.visibility = View.VISIBLE       //유저네임을 보이게 해줌
             mainactivity?.toolbar_btn_back.visibility = View.VISIBLE        //툴바의 뒤로가기 버튼을 보이게 해줌
+            fragmentView?.account_btn_follow_signout?.setOnClickListener {
+                requestFollow()
+            }
         }
 
         fragmentView?.account_recyclerview?.adapter = UserFragmentRecyclerViewAdapter()
@@ -84,7 +89,36 @@ class UserFragment : Fragment() {
             activity?.startActivityForResult(photoPickerIntent, PICK_PROFILE_FROM_ALBUM)
         }
         getProfileImage()
+        getFollowerAndFollowing()
         return fragmentView
+    }
+
+    fun getFollowerAndFollowing() {     //Follower와 Following을 텍스트로 표시해주는 함수
+        //내 페이지를 클릭했을 때는 내 uid, 상대방 페이지는 상대방 uid
+        firestore?.collection("users")?.document(uid!!)?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+            if(documentSnapshot == null) return@addSnapshotListener
+
+            var followDTO = documentSnapshot.toObject(FollowDTO::class.java)
+
+            if(followDTO?.followingCount != null) {
+                fragmentView?.account_tv_following_count?.text = followDTO?.followingCount?.toString()
+            }
+
+            if(followDTO?.followerCount != null) {
+                fragmentView?.account_tv_follower_count?.text = followDTO?.followerCount?.toString()
+
+                if(followDTO?.followers?.containsKey(currentUserUid!!)) {       //팔로워를 하고있다면 버튼이 변환
+                    fragmentView?.account_btn_follow_signout?.text = getString(R.string.follow_cancel)
+                    fragmentView?.account_btn_follow_signout?.background?.setColorFilter(ContextCompat.getColor(activity!!, R.color.colorLightGray), PorterDuff.Mode.MULTIPLY)
+
+                } else {
+                    if(uid != currentUserUid) {     //코드 안정성을 위하여 uid와 currentUserId가 같지 않다면을 넣어줌
+                        fragmentView?.account_btn_follow_signout?.text = getString(R.string.follow)
+                        fragmentView?.account_btn_follow_signout?.background?.colorFilter = null
+                    }
+                }
+            }
+        }
     }
 
     fun requestFollow() {
