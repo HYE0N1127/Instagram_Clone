@@ -18,6 +18,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.instagram_clone.LoginActivity
 import com.example.instagram_clone.MainActivity
 import com.example.instagram_clone.R
+import com.example.instagram_clone.navigation.model.FollowDTO
 import com.example.instagram_clone.navigation.model.contentDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -84,6 +85,44 @@ class UserFragment : Fragment() {
         }
         getProfileImage()
         return fragmentView
+    }
+
+    fun requestFollow() {
+        //상대 누구를 팔로우하는지 저장
+        var tsDocFollowing = firestore?.collection("users")?.document(currentUserUid!!)
+
+        firestore?.runTransaction { transaction ->
+            var followDTO = transaction.get(tsDocFollowing!!).toObject(FollowDTO::class.java) //누구를 팔로우하는지 받아옴
+
+            if(followDTO == null) {
+                followDTO == FollowDTO()
+
+                followDTO!!.followingCount = 1  //팔로잉 카운트를 1로 만듬
+                followDTO!!.followers[uid!!] = true     //중복 팔로잉 방지를 위해 UID를 넣어줌
+
+                transaction.set(tsDocFollowing, followDTO)  //DB에 데이터가 담김
+
+                return@runTransaction
+
+            }
+
+            if(followDTO.followings.containsKey(uid)){                //내가 팔로우한 상태라면?
+                //팔로잉 취소
+                followDTO?.followingCount = followDTO?.followingCount - 1
+                followDTO?.followers.remove(uid)        //UID를 삭제함으로써 팔로잉 목록에서 삭제
+
+            } else {
+                //팔로잉 추가
+                followDTO?.followingCount = followDTO?.followingCount + 1
+                followDTO?.followers[uid!!] = true
+            }
+            transaction.set(tsDocFollowing, followDTO)      //DB 저장
+            return@runTransaction
+        }
+
+
+        //타인이 누구를 팔로우 하는지 저장
+
     }
 
     fun getProfileImage() {     //올린 이미지를 다운받는 함수
