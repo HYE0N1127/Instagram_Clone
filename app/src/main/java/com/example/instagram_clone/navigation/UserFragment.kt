@@ -92,9 +92,10 @@ class UserFragment : Fragment() {
         var tsDocFollowing = firestore?.collection("users")?.document(currentUserUid!!)
 
         firestore?.runTransaction { transaction ->
-            var followDTO = transaction.get(tsDocFollowing!!).toObject(FollowDTO::class.java) //누구를 팔로우하는지 받아옴
+            var followDTO =
+                transaction.get(tsDocFollowing!!).toObject(FollowDTO::class.java) //누구를 팔로우하는지 받아옴
 
-            if(followDTO == null) {
+            if (followDTO == null) {
                 followDTO == FollowDTO()
 
                 followDTO!!.followingCount = 1  //팔로잉 카운트를 1로 만듬
@@ -106,7 +107,7 @@ class UserFragment : Fragment() {
 
             }
 
-            if(followDTO.followings.containsKey(uid)){                //내가 팔로우한 상태라면?
+            if (followDTO.followings.containsKey(uid)) {                //내가 팔로우한 상태라면?
                 //팔로잉 취소
                 followDTO?.followingCount = followDTO?.followingCount - 1
                 followDTO?.followers.remove(uid)        //UID를 삭제함으로써 팔로잉 목록에서 삭제
@@ -120,9 +121,35 @@ class UserFragment : Fragment() {
             return@runTransaction
         }
 
-
         //타인이 누구를 팔로우 하는지 저장
+        var tsDocFollower = firestore?.collection("users")?.document(uid!!)
 
+        firestore?.runTransaction { transaction ->
+            var followDTO =
+                transaction.get(tsDocFollower!!).toObject(FollowDTO::class.java)        //값을 읽어옴
+
+            if (followDTO == null) {
+                followDTO = FollowDTO()
+                followDTO!!.followerCount = 1
+                followDTO!!.followers[currentUserUid!!] = true
+
+                transaction.set(tsDocFollower, followDTO!!)
+                return@runTransaction
+            }
+
+            if (followDTO!!.followers.containsKey(currentUserUid)) {
+                //팔로우를 했을 경우
+                followDTO!!.followerCount = followDTO!!.followerCount - 1
+                followDTO!!.followers.remove(currentUserUid)
+
+            } else {
+                //팔로우를 안했을 경우
+                followDTO!!.followerCount = followDTO!!.followerCount + 1
+                followDTO!!.followers[currentUserUid!!] = true
+            }
+            transaction.set(tsDocFollower, followDTO!!)     //DB에 값 저장
+            return@runTransaction
+        }
     }
 
     fun getProfileImage() {     //올린 이미지를 다운받는 함수
