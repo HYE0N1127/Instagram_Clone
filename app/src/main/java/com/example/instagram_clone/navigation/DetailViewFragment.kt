@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.instagram_clone.R
+import com.example.instagram_clone.navigation.model.AlarmDTO
 import com.example.instagram_clone.navigation.model.contentDTO
+import com.google.api.Billing
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
@@ -144,10 +146,22 @@ class DetailViewFragment : Fragment() {
                     //when the button is not clicked
                     contentDTO?.favoriteCount = contentDTO.favoriteCount!! + 1
                     contentDTO?.favorites[uid!!] = true
-                }
 
+                    favoriteAlarm(contentDTOs[position].uid!!)
+                }
                 transaction.set(tsdoc, contentDTO)
             }
+        }
+
+        fun favoriteAlarm(destination: String) {
+            var alarmDTO = AlarmDTO()
+
+            alarmDTO.destinationUid = destination
+            alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
+            alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
+            alarmDTO.kind = 0
+            alarmDTO.timestamp = System.currentTimeMillis()
+            FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)       //Firebase에 Alarms라는 컬렉션 추가
         }
     }
 
