@@ -14,6 +14,7 @@ class CommentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comment)
+        contentUid = intent.getStringExtra("contentUid")
 
         comment_btn_send?.setOnClickListener {
             var comment = contentDTO.comment()

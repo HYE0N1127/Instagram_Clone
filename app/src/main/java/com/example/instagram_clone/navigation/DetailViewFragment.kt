@@ -1,5 +1,6 @@
 package com.example.instagram_clone.navigation
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.android.synthetic.main.item_detail.view.*
+import org.w3c.dom.Comment
 
 class DetailViewFragment : Fragment() {
     var firestore: FirebaseFirestore? = null
@@ -118,8 +120,13 @@ class DetailViewFragment : Fragment() {
                 activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_content, fragment)?.commit()
 
             }
-        }
+            viewholder.detailViewItem_Comment_Imageview.setOnClickListener { v ->
+                var intent = Intent(v.context, CommentActivity::class.java)
 
+                intent.putExtra("contentUid", contentUidList[p1])
+                startActivity(intent)
+            }
+        }
 
         fun favoriteEvent(position: Int) {
             var tsdoc = firestore?.collection("images")?.document(contentUidList[position])
