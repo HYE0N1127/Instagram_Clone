@@ -78,7 +78,7 @@ class AlarmFragment : Fragment() {
             }
 
             when (alarmDTOList[p1].kind) {
-                0 -> {
+                0-> {
                     val str_0 = alarmDTOList[p1].userId + getString(R.string.alarm_favorite)
                     view.commentviewitem_textview_profile.text = str_0
                 }
