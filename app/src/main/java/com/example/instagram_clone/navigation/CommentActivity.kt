@@ -52,6 +52,7 @@ class CommentActivity : AppCompatActivity() {
         var alarmDTO = AlarmDTO()
 
         alarmDTO.destinationUid = destinationUid
+        alarmDTO.kind = 1
         alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
         alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
         alarmDTO.timestamp = System.currentTimeMillis()
