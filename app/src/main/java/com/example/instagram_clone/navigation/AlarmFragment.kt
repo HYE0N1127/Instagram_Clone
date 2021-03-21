@@ -27,7 +27,8 @@ class AlarmFragment : Fragment() {
     ): View? {
         var view = LayoutInflater.from(activity).inflate(R.layout.fragment_alarm, container, false)
         view.alarmfragment_recyclerview.adapter = AlarmRecyclerviewAdapter()
-        view.alarmfragment_recyclerview.layoutManager = LinearLayoutManager(activity)     //어느 방향으로 배치할지
+        view.alarmfragment_recyclerview.layoutManager =
+            LinearLayoutManager(activity)     //어느 방향으로 배치할지
 
         return view
     }
@@ -38,13 +39,14 @@ class AlarmFragment : Fragment() {
         init {
             val uid = FirebaseAuth.getInstance().currentUser?.uid
 
-            FirebaseFirestore.getInstance().collection("alarms").whereEqualTo("destinationUid", uid)        //자신에게 온 알림만 알려줌
+            FirebaseFirestore.getInstance().collection("alarms")
+                .whereEqualTo("destinationUid", uid)        //자신에게 온 알림만 알려줌
                 .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                     alarmDTOList.clear()
 
-                    if(querySnapshot == null) return@addSnapshotListener
+                    if (querySnapshot == null) return@addSnapshotListener
 
-                    for(snapshot in querySnapshot.documents) {
+                    for (snapshot in querySnapshot.documents) {
                         alarmDTOList.add(snapshot.toObject(AlarmDTO::class.java)!!)
                     }
                     notifyDataSetChanged()
@@ -66,10 +68,12 @@ class AlarmFragment : Fragment() {
         override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
             var view = p0.itemView
 
-            FirebaseFirestore.getInstance().collection("profileImage").document(alarmDTOList[p1].uid!!).get.addOnCompleteListener { task ->
+            FirebaseFirestore.getInstance().collection("profileImage")
+                .document(alarmDTOList[p1].uid!!).get().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     var url = task.result!!["image"]
-                    Glide.with(view.context).load(url).apply(RequestOptions().circleCrop()).into(view.commentviewtiem_imageview_profile)
+                    Glide.with(view.context).load(url).apply(RequestOptions().circleCrop())
+                        .into(view.commentviewtiem_imageview_profile)
                 }
             }
 
@@ -81,7 +85,7 @@ class AlarmFragment : Fragment() {
 
                 1 -> {
                     val str_0 =
-                        alarmDTOList[p1].userId + " " + getString(R.string.alarm_comment) + " of " + alarmDTOList[p1]
+                        alarmDTOList[p1].userId + " " + getString(R.string.alarm_comment) + " of " + alarmDTOList[p1].message
                     view.commentviewitem_textview_profile.text = str_0
                 }
 
