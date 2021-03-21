@@ -20,6 +20,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.instagram_clone.LoginActivity
 import com.example.instagram_clone.MainActivity
 import com.example.instagram_clone.R
+import com.example.instagram_clone.navigation.model.AlarmDTO
 import com.example.instagram_clone.navigation.model.FollowDTO
 import com.example.instagram_clone.navigation.model.contentDTO
 import com.google.firebase.auth.FirebaseAuth
@@ -184,6 +185,16 @@ class UserFragment : Fragment() {
             transaction.set(tsDocFollower, followDTO!!)     //DB에 값 저장
             return@runTransaction
         }
+    }
+
+    fun followerAlarm(destinationUid: String) {
+        var alarmDTO = AlarmDTO()
+        alarmDTO.destinationUid = destinationUid
+        alarmDTO.userId = auth?.currentUser?.email
+        alarmDTO.uid = auth?.currentUser.uid
+        alarmDTO.kind = 2
+        alarmDTO.timestamp = System.currentTimeMillis()
+        FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
     }
 
     fun getProfileImage() {     //올린 이미지를 다운받는 함수
