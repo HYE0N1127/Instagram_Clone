@@ -5,11 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils.circleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.example.instagram_clone.R
 import com.example.instagram_clone.navigation.model.AlarmDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.fragment_alarm.view.*
 import kotlinx.android.synthetic.main.item_comment.view.*
 
 class AlarmFragment : Fragment() {
@@ -20,6 +26,8 @@ class AlarmFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         var view = LayoutInflater.from(activity).inflate(R.layout.fragment_alarm, container, false)
+        view.alarmfragment_recyclerview.adapter = AlarmRecyclerviewAdapter()
+        view.alarmfragment_recyclerview.layoutManager = LinearLayoutManager(activity)     //어느 방향으로 배치할지
 
         return view
     }
@@ -58,6 +66,13 @@ class AlarmFragment : Fragment() {
         override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
             var view = p0.itemView
 
+            FirebaseFirestore.getInstance().collection("profileImage").document(alarmDTOList[p1].uid!!).get.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    var url = task.result!!["image"]
+                    Glide.with(view.context).load(url).apply(RequestOptions().circleCrop()).into(view.commentviewtiem_imageview_profile)
+                }
+            }
+
             when (alarmDTOList[p1].kind) {
                 0 -> {
                     val str_0 = alarmDTOList[p1].userId + getString(R.string.alarm_favorite)
@@ -75,6 +90,7 @@ class AlarmFragment : Fragment() {
                     view.commentviewitem_textview_profile.text = str_0
                 }
             }
+            view.commentviewitem_textview_profile.visibility = View.INVISIBLE
         }
 
     }
