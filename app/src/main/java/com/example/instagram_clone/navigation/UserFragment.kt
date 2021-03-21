@@ -167,6 +167,7 @@ class UserFragment : Fragment() {
                 followDTO = FollowDTO()
                 followDTO!!.followerCount = 1
                 followDTO!!.followers[currentUserUid!!] = true
+                followerAlarm(uid!!)        //최초로 누군가가 팔로우를 할 때 알람을 보내줌
 
                 transaction.set(tsDocFollower, followDTO!!)
                 return@runTransaction
@@ -181,6 +182,8 @@ class UserFragment : Fragment() {
                 //팔로우를 안했을 경우
                 followDTO!!.followerCount = followDTO!!.followerCount + 1
                 followDTO!!.followers[currentUserUid!!] = true
+                followerAlarm(uid!!)        //팔로우를 하였다는 알람을 보내줌
+
             }
             transaction.set(tsDocFollower, followDTO!!)     //DB에 값 저장
             return@runTransaction
@@ -191,7 +194,7 @@ class UserFragment : Fragment() {
         var alarmDTO = AlarmDTO()
         alarmDTO.destinationUid = destinationUid
         alarmDTO.userId = auth?.currentUser?.email
-        alarmDTO.uid = auth?.currentUser.uid
+        alarmDTO.uid = auth?.currentUser?.uid
         alarmDTO.kind = 2
         alarmDTO.timestamp = System.currentTimeMillis()
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
