@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.example.instagram_clone.R
 import com.example.instagram_clone.navigation.model.AlarmDTO
 import com.example.instagram_clone.navigation.model.contentDTO
+import com.example.instagram_clone.navigation.util.FcmPush
 import com.google.api.Billing
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -154,15 +155,19 @@ class DetailViewFragment : Fragment() {
             }
         }
 
-        fun favoriteAlarm(destination: String) {
+        fun favoriteAlarm(destinationUid: String) {
             var alarmDTO = AlarmDTO()
 
-            alarmDTO.destinationUid = destination
+            alarmDTO.destinationUid = destinationUid
             alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
             alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
             alarmDTO.kind = 0
             alarmDTO.timestamp = System.currentTimeMillis()
             FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)       //Firebase에 Alarms라는 컬렉션 추가
+
+            var message = FirebaseAuth.getInstance()?.currentUser?.email + getString(R.string.alarm_favorite)
+
+            FcmPush.instance.sendMessage(destinationUid, "Howlstagram", message)
         }
     }
 

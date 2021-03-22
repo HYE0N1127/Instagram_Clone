@@ -11,6 +11,7 @@ import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.instagram_clone.navigation.*
+import com.example.instagram_clone.navigation.util.FcmPush
 import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -114,6 +115,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         registerPushToken()
 
     }
+
+//    override fun onStop() {
+//        super.onStop()
+//        FcmPush.instance.sendMessage("i9lSPsGXhrfzKoSelIHUXOQVpG33","hi","bye")
+//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
