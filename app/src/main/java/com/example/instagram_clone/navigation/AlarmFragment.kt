@@ -68,7 +68,7 @@ class AlarmFragment : Fragment() {
         override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
             var view = p0.itemView
 
-            FirebaseFirestore.getInstance().collection("profileImage")
+            FirebaseFirestore.getInstance().collection("profileImages")
                 .document(alarmDTOList[p1].uid!!).get().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     var url = task.result!!["image"]
@@ -94,7 +94,7 @@ class AlarmFragment : Fragment() {
                     view.commentviewitem_textview_profile.text = str_0
                 }
             }
-            view.commentviewitem_textview_profile.visibility = View.INVISIBLE
+            view.commentviewitem_textview_comment.visibility = View.INVISIBLE
         }
 
     }
