@@ -113,7 +113,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         bottom_navigation.selectedItemId = R.id.action_home
 
         registerPushToken()
-
     }
 
 //    override fun onStop() {
