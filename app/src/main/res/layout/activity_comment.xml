@@ -24,7 +24,7 @@
         android:layout_height="1dp"
         android:layout_below="@+id/my_toolbar"
         android:background="@color/colorDivision"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/comment_recyclerview"
@@ -32,9 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tollbar_division"
         android:layout_marginBottom="30dp"
-        android:layout_marginTop="8dp"
-
-        ></androidx.recyclerview.widget.RecyclerView>
+        android:layout_marginTop="8dp"/>
 
     <Button
         android:layout_alignParentRight="true"

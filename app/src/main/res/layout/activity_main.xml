@@ -48,14 +48,14 @@
         android:layout_height="1dp"
         android:layout_below="@+id/my_toolBar"
         android:background="@color/colorDivision"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal"/>
 
     <FrameLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/nav_division"
-        android:layout_below="@id/toolbar_division"></FrameLayout>
+        android:layout_below="@id/toolbar_division"/>
 
     <LinearLayout
         android:id="@+id/nav_division"
@@ -63,7 +63,7 @@
         android:layout_height="1dp"
         android:background="@color/colorDivision"
         android:layout_above="@+id/bottom_navigation"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

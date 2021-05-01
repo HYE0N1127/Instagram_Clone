@@ -47,7 +47,6 @@ class DetailViewFragment : Fragment() {
         var contentDTOs: ArrayList<contentDTO> = arrayListOf()
         var contentUidList: ArrayList<String> = arrayListOf()
 
-
         init {
             firestore?.collection("images")?.orderBy("timestamp")
                 ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
@@ -165,7 +164,7 @@ class DetailViewFragment : Fragment() {
             alarmDTO.timestamp = System.currentTimeMillis()
             FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)       //Firebase에 Alarms라는 컬렉션 추가
 
-            var message = FirebaseAuth.getInstance()?.currentUser?.email + getString(R.string.alarm_favorite)
+            var message = FirebaseAuth.getInstance().currentUser?.email + getString(R.string.alarm_favorite)
 
             FcmPush.instance.sendMessage(destinationUid, "Howlstagram", message)
         }
